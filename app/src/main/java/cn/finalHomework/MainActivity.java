@@ -1,5 +1,6 @@
 package cn.finalHomework;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int requestCode = 1000;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -35,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent toEdit = new Intent(MainActivity.this, EditTimeActivity.class);
+                startActivityForResult(toEdit,requestCode);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
