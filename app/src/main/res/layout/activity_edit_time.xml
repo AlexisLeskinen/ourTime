@@ -6,26 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".EditTimeActivity">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/edit_top_bar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="#00FFFFFF"-->
-<!--        android:padding="0dp"-->
-<!--        android:theme="@style/AppTheme.AppBarOverlay"-->
-<!--        app:elevation="0dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
+    <!--    <com.google.android.material.appbar.AppBarLayout-->
+    <!--        android:id="@+id/edit_top_bar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="#00FFFFFF"-->
+    <!--        android:padding="0dp"-->
+    <!--        android:theme="@style/AppTheme.AppBarOverlay"-->
+    <!--        app:elevation="0dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
 
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/edit_done"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="#00FFFFFF"-->
-<!--            android:icon="@drawable/ic_edit_done" />-->
+    <!--        <androidx.appcompat.widget.Toolbar-->
+    <!--            android:id="@+id/edit_done"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="?attr/actionBarSize"-->
+    <!--            android:background="#00FFFFFF"-->
+    <!--            android:icon="@drawable/ic_edit_done" />-->
 
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
+    <!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
@@ -105,9 +105,9 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:orientation="horizontal">
+            android:paddingEnd="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -135,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/date_desc"
-                    android:textColor="#888888"/>
+                    android:textColor="#888888" />
             </LinearLayout>
         </LinearLayout>
 
@@ -143,9 +143,9 @@
             android:id="@+id/repeat"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:orientation="horizontal">
+            android:paddingEnd="20dp">
 
             <ImageView
                 android:layout_width="40dp"
@@ -173,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/repeat_desc"
-                    android:textColor="#888888"/>
+                    android:textColor="#888888" />
             </LinearLayout>
         </LinearLayout>
 
@@ -181,9 +181,9 @@
             android:id="@+id/photo"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:orientation="horizontal">
+            android:paddingEnd="20dp">
 
             <ImageView
                 android:layout_width="40dp"
