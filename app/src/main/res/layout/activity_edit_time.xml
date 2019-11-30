@@ -4,7 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".EditTimeActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/edit_time_topbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/edit_time_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
@@ -13,7 +32,7 @@
         android:background="#00FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/edit_time_topbar_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +63,7 @@
                 android:inputType="textPersonName"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textColorHint="#888888" />
 
             <TextView
@@ -64,7 +83,7 @@
                 android:inputType="textPersonName"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textColorHint="#888888" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -119,7 +138,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/repeat"
+            android:id="@+id/loop"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
@@ -141,17 +160,17 @@
                 android:paddingEnd="8dp">
 
                 <TextView
-                    android:id="@+id/repeat_title"
+                    android:id="@+id/loop_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/repeat"
+                    android:text="@string/loop"
                     android:textColor="#000000" />
 
                 <TextView
-                    android:id="@+id/repeat_detail"
+                    android:id="@+id/loop_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/repeat_desc"
+                    android:text="@string/loop_desc"
                     android:textColor="#888888" />
             </LinearLayout>
         </LinearLayout>

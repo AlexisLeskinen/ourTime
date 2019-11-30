@@ -11,7 +11,7 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_theme"
             android:icon="@drawable/ic_menu_theme"
             android:title="@string/menu_theme" />
 
@@ -21,11 +21,11 @@
         android:id="@+id/group_beta"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings"
             android:title="@string/menu_settings" />
         <item
-            android:id="@+id/nav_send"
+            android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_about"
             android:title="@string/menu_about" />
     </group>
