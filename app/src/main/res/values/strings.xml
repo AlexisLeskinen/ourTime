@@ -25,6 +25,6 @@
     <string name="tag">添加标签</string>
     <string name="tag_desc">已选：暂无</string>
 
-    <string name="back">返回</string>
+    <string name="back">取消</string>
     <string name="confirm">确认</string>
 </resources>

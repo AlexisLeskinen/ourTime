@@ -17,7 +17,7 @@ import cn.finalHomework.R;
 import cn.finalHomework.model.DataSource;
 
 public class HomeFragment extends Fragment {
-    private static final int requestCode = 1000;
+    private static final int requestCode = 2000;
     private DataSource appDAta;
 
     public View onCreateView(@NonNull LayoutInflater inflater,

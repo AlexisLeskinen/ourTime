@@ -3,12 +3,19 @@ package cn.finalHomework;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,17 +25,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import cn.finalHomework.data.Event;
 import cn.finalHomework.data.EventLabel;
 
 public class EditEventActivity extends AppCompatActivity {
+    private static final int requestCode = 1001;
+    final static private String WEEK = "每周";
+    final static private String MONTH = "每月";
+    final static private String YEAR = "每年";
+    final static private String CUSTOM = "自定义";
+    final static private String NONE = "无";
+
+    final static private String[] cycle = new String[]{WEEK, MONTH, YEAR, CUSTOM, NONE};
 
     private EditText title, remark;
     private TextView dateDetail, loopDetail;
@@ -36,6 +48,16 @@ public class EditEventActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Event event;
     private EventLabel labels;
+    Color theme;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_OK) {
+            //保存图片的uri
+            event.setImageUri(data.getData());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +65,7 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         //设置状态栏颜色
-        addStatusViewWithColor(this, 0xFF03A9F4);
+        addStatusViewWithColor(this);
 
         //获取传入该页面的事件参数
 //        Intent intent = getIntent();
@@ -66,7 +88,14 @@ public class EditEventActivity extends AppCompatActivity {
         photo = findViewById(R.id.photo);
         tag = findViewById(R.id.tag);
 
+        //点击设置日期事件
         date.setOnClickListener(new setDate());
+        //点击设置循环参数
+        loop.setOnClickListener(new setLoop());
+        //点击设置背景图
+        photo.setOnClickListener(new setPhoto());
+        //点击设置标签
+        tag.setOnClickListener(new setLabels());
 
         //设置工具栏选项
         toolbar = this.findViewById(R.id.edit_time_toolbar);
@@ -83,7 +112,7 @@ public class EditEventActivity extends AppCompatActivity {
         //确认键
         toolbar.setOnMenuItemClickListener(new ConfirmListener());
 
-        if(event != null){
+        if (event != null) {
             showEvent();
         }
     }
@@ -95,12 +124,12 @@ public class EditEventActivity extends AppCompatActivity {
      *
      * @param activity
      */
-    private void addStatusViewWithColor(Activity activity, int color) {
+    private void addStatusViewWithColor(Activity activity) {
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         View statusBarView = new View(activity);
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 getStatusBarHeight(activity));
-        statusBarView.setBackgroundColor(color);
+        statusBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         contentView.addView(statusBarView, lp);
     }
 
@@ -137,10 +166,10 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     //展示事件信息
-    protected void showEvent(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
-        dateDetail.setText(sdf.format(event.getEventDate()));
-
+    protected void showEvent() {
+        title.setText(event.getTitle());
+        remark.setText(event.getRemarks());
+        dateDetail.setText(event.dateToString());
 //        loopDetail.setText();
     }
 
@@ -148,32 +177,101 @@ public class EditEventActivity extends AppCompatActivity {
     private class setDate implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            Calendar setter = Calendar.getInstance();
+            final Calendar setter = Calendar.getInstance();
             //如果event非空，那么应该是修改时间
             if (event != null) {
                 setter.setTime(event.getEventDate());
             }
-
             //设置日期
             DatePickerDialog datePicker = new DatePickerDialog(EditEventActivity.this,
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-
-//                            TimePickerDialog timePicker = new TimePickerDialog(EditEventActivity.this,
-//                                    new TimePickerDialog.OnTimeSetListener() {
-//                                        @Override
-//                                        public void onTimeSet(TimePicker timePicker, int i, int i1) {
-//
-//                                        }
-//                                    },setter.);
+                            final int Y = year, M = monthOfYear, D = dayOfMonth;
+                            //设置时分
+                            TimePickerDialog timePicker = new TimePickerDialog(EditEventActivity.this,
+                                    new TimePickerDialog.OnTimeSetListener() {
+                                        @Override
+                                        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                                            event.setDate(Y, M, D, hour, minute);
+                                            dateDetail.setText(event.dateToString());
+                                        }
+                                    },
+                                    setter.get(Calendar.HOUR),
+                                    setter.get(Calendar.MINUTE),
+                                    true);
+                            timePicker.show();
                         }
                     },
                     setter.get(Calendar.YEAR),
                     setter.get(Calendar.MONTH),
                     setter.get(Calendar.DAY_OF_MONTH));
             datePicker.show();
+        }
+    }
+
+    //点击设置循环参数
+    private class setLoop implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder loopSelectDialog =
+                    new AlertDialog.Builder(EditEventActivity.this);
+            loopSelectDialog.setTitle("周期");
+            loopSelectDialog.setItems(cycle, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //非自定义周期
+                    if (!cycle[i].equals(CUSTOM)) {
+                        event.setLoop(cycle[i]);
+                        loopDetail.setText(event.getLoop());
+                    } else {
+                        AlertDialog.Builder customDialog =
+                                new AlertDialog.Builder(EditEventActivity.this);
+                        customDialog.setTitle("周期");
+                        //输入框设置
+                        final EditText editText = new EditText(EditEventActivity.this);
+                        editText.setHint("输入周期(天)");
+                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        editText.setLeftTopRightBottom(100, 0, 100, 0);
+                        customDialog.setView(editText);
+                        //取消输入
+                        customDialog.setNegativeButton(R.string.back, null);
+                        //确认
+                        customDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String inputDay = editText.getText().toString();
+                                if (!inputDay.equals("")) {
+                                    event.setLoop(inputDay + "天");
+                                } else
+                                    event.setLoop(NONE);
+                                loopDetail.setText(event.getLoop());
+                            }
+                        });
+                        customDialog.show();
+                    }
+                }
+            });
+            loopSelectDialog.show();
+        }
+    }
+
+    //点击设置背景图
+    private class setPhoto implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            //调用系统的图片选择器获取图片路径
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            startActivityForResult(intent, requestCode);
+        }
+    }
+
+    //点击设置标签
+    private class setLabels implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+
         }
     }
 }
