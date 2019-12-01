@@ -1,6 +1,5 @@
 package cn.finalHomework.data;
 
-import android.net.Uri;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -13,7 +12,7 @@ public class Event implements Serializable {
     private static final long serialVersionUID = -2834052242012114329L;
 
     private Date eventDate;             //时间信息
-    private Uri imageUri;               //背景图
+    private String imageUri;            //背景图
     private String title;               //标题
     private String remarks;             //备注
     private ArrayList<String> label;    //标签
@@ -51,7 +50,7 @@ public class Event implements Serializable {
         this.remarks = remarks;
     }
 
-    public void setImageUri(Uri imgUrl) {
+    public void setImageUri(String imgUrl) {
         imageUri = imgUrl;
     }
 
@@ -75,7 +74,7 @@ public class Event implements Serializable {
         return remarks;
     }
 
-    public Uri getImageUri() {
+    public String getImageUri() {
         return imageUri;
     }
 

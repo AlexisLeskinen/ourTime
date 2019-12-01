@@ -20,7 +20,7 @@ public class EventLabel implements Serializable {
     }
 
     public void deleteLabel(String label){
-        labels.remove(labels.indexOf(label));
+        labels.remove(label);
     }
 
     public ArrayList<String> getLabels(){

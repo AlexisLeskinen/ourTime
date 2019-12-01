@@ -1,5 +1,6 @@
 package cn.finalHomework;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,6 +33,9 @@ import java.util.Date;
 import cn.finalHomework.data.Event;
 import cn.finalHomework.data.EventLabel;
 
+import static cn.finalHomework.MainActivity.BUNDLEMARK;
+import static cn.finalHomework.MainActivity.EVENTMARK;
+
 public class EditEventActivity extends AppCompatActivity {
     private static final int requestCode = 1001;
     final static private String WEEK = "每周";
@@ -53,9 +57,10 @@ public class EditEventActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             //保存图片的uri
-            event.setImageUri(data.getData());
+            if (data.getData() != null)
+                event.setImageUri(data.getData().toString());
         }
     }
 
@@ -160,6 +165,11 @@ public class EditEventActivity extends AppCompatActivity {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
 
+            Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EVENTMARK, event);
+            toHome.putExtra(BUNDLEMARK, bundle);
+            setResult(RESULT_OK, toHome);
             EditEventActivity.this.finish();
             return true;
         }

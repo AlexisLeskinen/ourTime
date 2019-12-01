@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import cn.finalHomework.data.Event;
 
 public class EventsAdapter extends ArrayAdapter<Event> {
     private Context mContext;
-
 
     public EventsAdapter(@NonNull Context context, int resource, @NonNull List<Event> objects) {
         super(context, resource, objects);
@@ -52,7 +52,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         if (eventItem.getImageUri() != null) {
             try {
                 bgImg = BitmapFactory.decodeStream(mContext.getContentResolver().
-                        openInputStream(eventItem.getImageUri()));
+                        openInputStream(Uri.parse(eventItem.getImageUri())));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

@@ -3,14 +3,15 @@ package cn.finalHomework;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.widget.Toast;
 
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -21,17 +22,38 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import cn.finalHomework.model.DataSource;
+import cn.finalHomework.data.Event;
 
 public class MainActivity extends AppCompatActivity {
+    public static String BUNDLEMARK = "BUNDLE";
+    public static String EVENTMARK = "EVENT";
 
     private AppBarConfiguration mAppBarConfiguration;
+    private NavController navController;
+    //向Fragment传参用
+    private Bundle bundle;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //回传参数检查
+        if (data != null) {
+            bundle = data.getBundleExtra(BUNDLEMARK);
+            if (bundle != null) {
+                Event event = (Event) bundle.getSerializable(EVENTMARK);
+                //将新的event对象传给Fragment
+                if (event != null) {
+                    bundle.putSerializable(EVENTMARK, event);
+                    navController.setGraph(R.navigation.mobile_navigation, bundle);
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         //顶部工具栏
         Toolbar toolbar = findViewById(R.id.main_top_bar);
@@ -45,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_theme, R.id.nav_settings, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
