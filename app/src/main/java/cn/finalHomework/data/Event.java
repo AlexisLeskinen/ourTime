@@ -15,18 +15,19 @@ public class Event implements Serializable {
     private String imageUri;            //背景图
     private String title;               //标题
     private String remarks;             //备注
-    private ArrayList<String> label;    //标签
+    private ArrayList<String> labels;    //标签
     private String loop;                //循环设置
 
     static private SimpleDateFormat sdf =
-            new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());;
+            new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
+    ;
 
     public Event() {
         eventDate = null;
         imageUri = null;
         title = null;
         remarks = null;
-        label = null;
+        labels = null;
         loop = null;
     }
 
@@ -54,8 +55,21 @@ public class Event implements Serializable {
         imageUri = imgUrl;
     }
 
-    public void setLabel(ArrayList<String> label) {
-        this.label = label;
+    public void addLabel(String label) {
+        if (labels == null)
+            labels = new ArrayList<>();
+
+        if (!labels.contains(label))
+            labels.add(label);
+    }
+
+    public void deleteLabel(String label) {
+        if (labels != null && labels.contains(label)) {
+            labels.remove(label);
+            //如果标签列表是空的，将对象置null
+            if (labels.isEmpty())
+                labels = null;
+        }
     }
 
     public void setLoop(String loop) {
@@ -79,7 +93,7 @@ public class Event implements Serializable {
     }
 
     public ArrayList<String> getLabel() {
-        return label;
+        return labels;
     }
 
     public String getLoop() {

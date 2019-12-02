@@ -1,6 +1,5 @@
 package cn.finalHomework.ui.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -27,6 +25,7 @@ import static cn.finalHomework.MainActivity.EVENTMARK;
 
 public class HomeFragment extends Fragment {
     private static final int requestCode = 2000;
+    //事件信息存储对象
     private DataSource appDAta;
     private ArrayList<Event> eventList;
 
@@ -35,7 +34,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         appDAta = new DataSource(getContext());
         //读取保存的数据
-        appDAta.loadData();
+        appDAta.loadEvents();
         if(appDAta.getEvents()!= null)
             eventList = appDAta.getEvents();
         else
@@ -74,6 +73,6 @@ public class HomeFragment extends Fragment {
         super.onDestroy();
 
         //保存数据
-        appDAta.saveData();
+        appDAta.saveEvents(eventList);
     }
 }

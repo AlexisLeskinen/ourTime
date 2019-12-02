@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/bgWordColor" />
 
             <TextView
                 android:id="@+id/item_img_date"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/item_status"
                 android:gravity="center_horizontal"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/bgWordColor" />
 
         </RelativeLayout>
 

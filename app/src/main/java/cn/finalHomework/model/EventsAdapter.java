@@ -51,6 +51,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
                 R.drawable.defeault_bitmap);
         if (eventItem.getImageUri() != null) {
             try {
+                //记得给外部存储读取权限
                 bgImg = BitmapFactory.decodeStream(mContext.getContentResolver().
                         openInputStream(Uri.parse(eventItem.getImageUri())));
             } catch (FileNotFoundException e) {
@@ -65,17 +66,18 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         //左侧图片提示信息
         Calendar now = Calendar.getInstance();
-        long passTime;
+        long intervalTime;
         if (now.after(eventItem.getEventDate())) {
-            eventStatus.setText("已经");
-            passTime = now.getTime().getTime() - eventItem.getEventDate().getTime();
+            eventStatus.setText(R.string.time_status_pass);
+            intervalTime = now.getTime().getTime() - eventItem.getEventDate().getTime();
         } else {
-            eventStatus.setText("只剩");
-            passTime = eventItem.getEventDate().getTime() - now.getTime().getTime();
+            eventStatus.setText(R.string.time_status_not_yet);
+            intervalTime = eventItem.getEventDate().getTime() - now.getTime().getTime();
         }
         //获得两者相差的Date对象
-        now.setTime(new Date(passTime));
-        eventDateImg.setText(now.get(Calendar.DAY_OF_YEAR) + "天");
+//        now.setTime(new Date(intervalTime));
+//        eventDateImg.setText(now.get(Calendar.DAY_OF_YEAR) + "天");
+        eventDateImg.setText(intervalTime / (1000 * 3600 * 24) + "天");
 
         return item;
     }

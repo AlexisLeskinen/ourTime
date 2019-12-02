@@ -29,14 +29,12 @@ public class DataSource {
         return labels;
     }
 
-    public void saveData() {
+    public void saveEvents(ArrayList<Event> events) {
         saveObject(events, eventsFile);
-        saveObject(labels, labelsFile);
     }
 
-    public void loadData(){
-        loadEvents();
-        loadLabels();
+    public void saveLabels(EventLabel labels) {
+        saveObject(labels, labelsFile);
     }
 
     //保存对象
@@ -54,7 +52,7 @@ public class DataSource {
 
     //去除warning
     @SuppressWarnings("unchecked")
-    private void loadEvents() {
+    public void loadEvents() {
         try {
             ObjectInputStream inputStream = new ObjectInputStream(
                     context.openFileInput(eventsFile)
@@ -66,7 +64,7 @@ public class DataSource {
         }
     }
 
-    private void loadLabels() {
+    public void loadLabels() {
         try {
             ObjectInputStream inputStream = new ObjectInputStream(
                     context.openFileInput(labelsFile)

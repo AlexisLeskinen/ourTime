@@ -1,6 +1,5 @@
 package cn.finalHomework;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,7 +11,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,15 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 import cn.finalHomework.data.Event;
 import cn.finalHomework.data.EventLabel;
+import cn.finalHomework.model.DataSource;
 
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
@@ -47,12 +52,17 @@ public class EditEventActivity extends AppCompatActivity {
     final static private String[] cycle = new String[]{WEEK, MONTH, YEAR, CUSTOM, NONE};
 
     private EditText title, remark;
-    private TextView dateDetail, loopDetail;
+    private TextView dateDetail, loopDetail, labelsDetail;
     private LinearLayout date, loop, photo, tag;
+    private ImageView headerImg;
     private Toolbar toolbar;
+
     private Event event;
+    private DataSource labelData;
     private EventLabel labels;
-    Color theme;
+
+    boolean[] hasSelect;
+    String[] tempLabels;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -72,6 +82,14 @@ public class EditEventActivity extends AppCompatActivity {
         //设置状态栏颜色
         addStatusViewWithColor(this);
 
+        //获取标签数据
+        labelData = new DataSource(this);
+        labelData.loadLabels();
+        if (labelData.getLabels() != null)
+            labels = labelData.getLabels();
+        else
+            labels = new EventLabel();
+
         //获取传入该页面的事件参数
 //        Intent intent = getIntent();
 //        event = (Event) intent.getSerializableExtra("event");
@@ -82,16 +100,18 @@ public class EditEventActivity extends AppCompatActivity {
         event.setRemarks("赶紧做完吧！");
 
         //初始化控件
+        headerImg = findViewById(R.id.header_background);
         title = findViewById(R.id.title_edit);
         remark = findViewById(R.id.remark_edit);
 
         dateDetail = findViewById(R.id.date_detail);
         loopDetail = findViewById(R.id.loop_detail);
+        labelsDetail = findViewById(R.id.labels_detail);
 
         date = findViewById(R.id.date);
         loop = findViewById(R.id.loop);
         photo = findViewById(R.id.photo);
-        tag = findViewById(R.id.tag);
+        tag = findViewById(R.id.labels);
 
         //点击设置日期事件
         date.setOnClickListener(new setDate());
@@ -120,6 +140,13 @@ public class EditEventActivity extends AppCompatActivity {
         if (event != null) {
             showEvent();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //保存标签信息
+        labelData.saveLabels(labels);
     }
 
     //设置状态栏颜色
@@ -180,7 +207,8 @@ public class EditEventActivity extends AppCompatActivity {
         title.setText(event.getTitle());
         remark.setText(event.getRemarks());
         dateDetail.setText(event.dateToString());
-//        loopDetail.setText();
+        loopDetail.setText(event.getLoop());
+        updateHeaderBG();
     }
 
     //点击设置时间
@@ -226,7 +254,7 @@ public class EditEventActivity extends AppCompatActivity {
         public void onClick(View view) {
             AlertDialog.Builder loopSelectDialog =
                     new AlertDialog.Builder(EditEventActivity.this);
-            loopSelectDialog.setTitle("周期");
+            loopSelectDialog.setTitle(R.string.loop_dialog_title);
             loopSelectDialog.setItems(cycle, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -237,12 +265,11 @@ public class EditEventActivity extends AppCompatActivity {
                     } else {
                         AlertDialog.Builder customDialog =
                                 new AlertDialog.Builder(EditEventActivity.this);
-                        customDialog.setTitle("周期");
+                        customDialog.setTitle(R.string.loop_dialog_title);
                         //输入框设置
                         final EditText editText = new EditText(EditEventActivity.this);
-                        editText.setHint("输入周期(天)");
+                        editText.setHint(R.string.loop_dialog_hint);
                         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        editText.setLeftTopRightBottom(100, 0, 100, 0);
                         customDialog.setView(editText);
                         //取消输入
                         customDialog.setNegativeButton(R.string.back, null);
@@ -251,7 +278,7 @@ public class EditEventActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String inputDay = editText.getText().toString();
-                                if (!inputDay.equals("")) {
+                                if (!inputDay.isEmpty()) {
                                     event.setLoop(inputDay + "天");
                                 } else
                                     event.setLoop(NONE);
@@ -274,6 +301,8 @@ public class EditEventActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
             startActivityForResult(intent, requestCode);
+            //获取到图片之后刷新header背景
+            updateHeaderBG();
         }
     }
 
@@ -281,7 +310,118 @@ public class EditEventActivity extends AppCompatActivity {
     private class setLabels implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            AlertDialog.Builder labelsSelectDialog =
+                    new AlertDialog.Builder(EditEventActivity.this);
+            //复选框的参数设置真蛋疼。。。
+            setMultiChoiceArg();
 
+            labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect, new LabelsSelect());
+            //取消
+            labelsSelectDialog.setNegativeButton(R.string.back, null);
+            //确定
+            labelsSelectDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    updateLabelsDetail();
+                }
+            });
+            //添加新标签
+            labelsSelectDialog.setNeutralButton(R.string.labels_new, new LabelsAdd(labelsSelectDialog));
+            labelsSelectDialog.show();
+        }
+    }
+
+    //多选监听事件
+    class LabelsSelect implements DialogInterface.OnMultiChoiceClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            if (isChecked) {
+                event.addLabel(labels.get(which));
+            } else {
+                event.deleteLabel(labels.get(which));
+            }
+        }
+    }
+
+    //输入新标签
+    class LabelsAdd implements DialogInterface.OnClickListener {
+        private AlertDialog.Builder labelsSelectDialog;
+        LabelsAdd(AlertDialog.Builder labelsSelectDialog){
+            this.labelsSelectDialog=labelsSelectDialog;
+        }
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            AlertDialog.Builder addLabelDialog =
+                    new AlertDialog.Builder(EditEventActivity.this);
+            addLabelDialog.setTitle(R.string.labels_new);
+            //输入框设置
+            final EditText editText = new EditText(EditEventActivity.this);
+            editText.setHint(R.string.labels_add_hint);
+            addLabelDialog.setView(editText);
+            //取消输入
+            addLabelDialog.setNegativeButton(R.string.back, null);
+            //确认
+            addLabelDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    String inputLabel = editText.getText().toString();
+                    inputLabel = inputLabel.trim();
+                    if (!inputLabel.isEmpty()) {
+                        labels.add(inputLabel);
+                        labelsSelectDialog.show();
+                    }
+                }
+            });
+            addLabelDialog.show();
+        }
+    }
+
+    private void setMultiChoiceArg() {
+        //复选框的参数设置真蛋疼。。。
+        //初始化化布尔数组全为false，长度为labels个
+        hasSelect = new boolean[labels.size()];
+        Arrays.fill(hasSelect, false);
+        //初始化复选框的名称，放在一个新的String数组里面保存
+        tempLabels = new String[labels.size()];
+        tempLabels = labels.toArray(tempLabels);
+        ArrayList<String> labelOfEvent = event.getLabel();
+        //获得已经被选择标签的布尔数组
+        if (labelOfEvent != null) {
+            for (int i = 0; i < labelOfEvent.size(); i++) {
+                if (labels.contains(labelOfEvent.get(i))) {
+                    hasSelect[labels.indexOf(labelOfEvent.get(i))] = true;
+                }
+            }
+        }
+    }
+
+    //更新背景图像
+    private void updateHeaderBG() {
+        if (event.getImageUri() != null) {
+            Bitmap bgImg = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.side_nav_bar);
+            if (event.getImageUri() != null) {
+                try {
+                    bgImg = BitmapFactory.decodeStream(getContentResolver().
+                            openInputStream(Uri.parse(event.getImageUri())));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            headerImg.setImageBitmap(bgImg);
+        }
+    }
+
+    //更新标签信息
+    private void updateLabelsDetail() {
+        if (event.getLabel() != null) {
+            String[] tempLabels = new String[event.getLabel().size()];
+            tempLabels = event.getLabel().toArray(tempLabels);
+            StringBuffer detail = new StringBuffer();
+            for (String l : tempLabels) {
+                detail.append(l + " ");
+            }
+            labelsDetail.setText(detail.toString());
         }
     }
 }
