@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_time_toolbar"
-        app:srcCompat="@color/colorPrimary" />
+        app:srcCompat="@drawable/side_nav_bar" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_time_toolbar"
@@ -65,6 +65,7 @@
                 android:ems="10"
                 android:hint="@string/edit_title_desc"
                 android:inputType="textPersonName"
+                android:maxLength="20"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textColor="@color/bgWordColor"
@@ -85,6 +86,7 @@
                 android:ems="10"
                 android:hint="@string/edit_remark_desc"
                 android:inputType="textPersonName"
+                android:maxLength="20"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textColor="@color/bgWordColor"
@@ -220,7 +222,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/ic_event_tag" />
+                app:srcCompat="@drawable/ic_event_label" />
 
             <LinearLayout
                 android:layout_width="match_parent"

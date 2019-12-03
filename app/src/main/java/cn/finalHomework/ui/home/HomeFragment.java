@@ -1,15 +1,18 @@
 package cn.finalHomework.ui.home;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -43,11 +46,14 @@ public class HomeFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             Event event = (Event) bundle.getSerializable(EVENTMARK);
-            if (event != null) {
-                Toast.makeText(getContext(), event.getRemarks(), Toast.LENGTH_SHORT).show();
+            //如果页面返回了新event对象，将他添加到eventList中
+            if (event != null && !eventList.contains(event)) {
                 eventList.add(event);
             }
         }
+
+        //顶部轮播图
+
 
         ListView eventListView = root.findViewById(R.id.events_list);
         if (getContext() != null) {
@@ -55,7 +61,7 @@ public class HomeFragment extends Fragment {
             eventListView.setAdapter(eventsAdapter);
         }
 
-
+        //添加event
         FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +75,8 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
+    public void onStop() {
+        super.onStop();
         //保存数据
         appDAta.saveEvents(eventList);
     }

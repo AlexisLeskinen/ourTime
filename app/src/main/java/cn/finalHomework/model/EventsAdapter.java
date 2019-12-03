@@ -25,10 +25,18 @@ import cn.finalHomework.data.Event;
 
 public class EventsAdapter extends ArrayAdapter<Event> {
     private Context mContext;
+    private int i = 0;
+    private List<Event> mData;
 
     public EventsAdapter(@NonNull Context context, int resource, @NonNull List<Event> objects) {
         super(context, resource, objects);
         mContext = context;
+        mData=objects;
+    }
+
+    @Override
+    public int getCount() {
+        return mData.size();
     }
 
     @SuppressLint("ViewHolder")
@@ -47,19 +55,8 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         Event eventItem = getItem(position);
 
-        Bitmap bgImg = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.defeault_bitmap);
-        if (eventItem.getImageUri() != null) {
-            try {
-                //记得给外部存储读取权限
-                bgImg = BitmapFactory.decodeStream(mContext.getContentResolver().
-                        openInputStream(Uri.parse(eventItem.getImageUri())));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        backgroundImg.setImageBitmap(bgImg);
+        backgroundImg.setImageBitmap(eventItem.getEventBitmap(mContext));
+        i++;
         eventTitle.setText(eventItem.getTitle());
         eventDate.setText(eventItem.dateToString());
         eventRemarks.setText(eventItem.getRemarks());
@@ -81,5 +78,6 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         return item;
     }
+
 }
 

@@ -1,12 +1,22 @@
 package cn.finalHomework.data;
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
+
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import cn.finalHomework.R;
 
 public class Event implements Serializable {
     private static final long serialVersionUID = -2834052242012114329L;
@@ -20,7 +30,6 @@ public class Event implements Serializable {
 
     static private SimpleDateFormat sdf =
             new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
-    ;
 
     public Event() {
         eventDate = null;
@@ -33,7 +42,7 @@ public class Event implements Serializable {
 
     public void setDate(int year, int mon, int day, int hour, int min) {
         try {
-            eventDate = sdf.parse(year + "年" + mon + "月" + day + "日 " + hour + ":" + min);
+            eventDate = sdf.parse(year + "年" + mon + 1 + "月" + day + "日 " + hour + ":" + min);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -103,5 +112,21 @@ public class Event implements Serializable {
     //返回格式化的时间信息
     public String dateToString() {
         return sdf.format(getEventDate());
+    }
+
+    //根据图片的Uri返回Bitmap
+    public Bitmap getEventBitmap(@NonNull Context context) {
+        Bitmap bgImg = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.defeault_bitmap);
+        if (getImageUri() != null) {
+            try {
+                //记得给外部存储读取权限
+                bgImg = BitmapFactory.decodeStream(context.getContentResolver().
+                        openInputStream(Uri.parse(getImageUri())));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return bgImg;
     }
 }

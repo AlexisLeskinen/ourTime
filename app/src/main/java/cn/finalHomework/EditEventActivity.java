@@ -11,9 +11,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -40,6 +37,7 @@ import cn.finalHomework.model.DataSource;
 
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
+
 
 public class EditEventActivity extends AppCompatActivity {
     private static final int requestCode = 1001;
@@ -315,13 +313,24 @@ public class EditEventActivity extends AppCompatActivity {
             //复选框的参数设置真蛋疼。。。
             setMultiChoiceArg();
 
-            labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect, new LabelsSelect());
+            labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                }
+            });
             //取消
             labelsSelectDialog.setNegativeButton(R.string.back, null);
             //确定
             labelsSelectDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    //向event对象写入新的标签信息
+                    for (int i = 0; i < hasSelect.length; i++) {
+                        if (hasSelect[i])
+                            event.addLabel(tempLabels[i]);
+                        else
+                            event.deleteLabel(tempLabels[i]);
+                    }
                     updateLabelsDetail();
                 }
             });
@@ -331,24 +340,16 @@ public class EditEventActivity extends AppCompatActivity {
         }
     }
 
-    //多选监听事件
-    class LabelsSelect implements DialogInterface.OnMultiChoiceClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-            if (isChecked) {
-                event.addLabel(labels.get(which));
-            } else {
-                event.deleteLabel(labels.get(which));
-            }
-        }
-    }
-
     //输入新标签
     class LabelsAdd implements DialogInterface.OnClickListener {
+        //保存一开始的复选框对象，这样能够在添加完新标签后
+        //再次自动调出复选框页面
         private AlertDialog.Builder labelsSelectDialog;
-        LabelsAdd(AlertDialog.Builder labelsSelectDialog){
-            this.labelsSelectDialog=labelsSelectDialog;
+
+        LabelsAdd(AlertDialog.Builder labelsSelectDialog) {
+            this.labelsSelectDialog = labelsSelectDialog;
         }
+
         @Override
         public void onClick(DialogInterface dialog, int which) {
             AlertDialog.Builder addLabelDialog =
@@ -397,19 +398,7 @@ public class EditEventActivity extends AppCompatActivity {
 
     //更新背景图像
     private void updateHeaderBG() {
-        if (event.getImageUri() != null) {
-            Bitmap bgImg = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.side_nav_bar);
-            if (event.getImageUri() != null) {
-                try {
-                    bgImg = BitmapFactory.decodeStream(getContentResolver().
-                            openInputStream(Uri.parse(event.getImageUri())));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            headerImg.setImageBitmap(bgImg);
-        }
+        headerImg.setImageBitmap(event.getEventBitmap(this));
     }
 
     //更新标签信息
