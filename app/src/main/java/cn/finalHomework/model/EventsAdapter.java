@@ -2,9 +2,6 @@ package cn.finalHomework.model;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.FileNotFoundException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +21,6 @@ import cn.finalHomework.data.Event;
 
 public class EventsAdapter extends ArrayAdapter<Event> {
     private Context mContext;
-    private int i = 0;
     private List<Event> mData;
 
     public EventsAdapter(@NonNull Context context, int resource, @NonNull List<Event> objects) {
@@ -46,6 +41,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View item = layoutInflater.inflate(R.layout.home_events_list, parent, false);
 
+
         ImageView backgroundImg = item.findViewById(R.id.item_img);
         TextView eventStatus = item.findViewById(R.id.item_status);
         TextView eventDateImg = item.findViewById(R.id.item_img_date);
@@ -56,7 +52,6 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         Event eventItem = getItem(position);
 
         backgroundImg.setImageBitmap(eventItem.getEventBitmap(mContext));
-        i++;
         eventTitle.setText(eventItem.getTitle());
         eventDate.setText(eventItem.dateToString());
         eventRemarks.setText(eventItem.getRemarks());

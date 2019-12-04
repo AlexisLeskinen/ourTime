@@ -42,7 +42,7 @@ public class Event implements Serializable {
 
     public void setDate(int year, int mon, int day, int hour, int min) {
         try {
-            eventDate = sdf.parse(year + "年" + mon + 1 + "月" + day + "日 " + hour + ":" + min);
+            eventDate = sdf.parse(year + "年" + mon  + "月" + day + "日 " + hour + ":" + min);
         } catch (ParseException e) {
             e.printStackTrace();
         }

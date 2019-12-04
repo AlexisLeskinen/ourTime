@@ -25,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +69,11 @@ public class EditEventActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //保存图片的uri
-            if (data.getData() != null)
+            if (data.getData() != null) {
                 event.setImageUri(data.getData().toString());
+                //获取到图片之后刷新header背景
+                updateHeaderBG();
+            }
         }
     }
 
@@ -89,13 +94,10 @@ public class EditEventActivity extends AppCompatActivity {
             labels = new EventLabel();
 
         //获取传入该页面的事件参数
-//        Intent intent = getIntent();
-//        event = (Event) intent.getSerializableExtra("event");
-
-        event = new Event();
-        event.setDate(new Date());
-        event.setTitle("安卓期末作业");
-        event.setRemarks("赶紧做完吧！");
+        Intent intent = getIntent();
+        event = (Event) intent.getSerializableExtra("event");
+        if (event == null)
+            event = new Event();
 
         //初始化控件
         headerImg = findViewById(R.id.header_background);
@@ -135,9 +137,7 @@ public class EditEventActivity extends AppCompatActivity {
         //确认键
         toolbar.setOnMenuItemClickListener(new ConfirmListener());
 
-        if (event != null) {
-            showEvent();
-        }
+        showEvent();
     }
 
     @Override
@@ -182,6 +182,7 @@ public class EditEventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_event, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -189,23 +190,35 @@ public class EditEventActivity extends AppCompatActivity {
     private class ConfirmListener implements Toolbar.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            event.setTitle(title.getText().toString());
+            event.setRemarks(remark.getText().toString());
+            if (event.getTitle() == null) {
+                Snackbar.make(toolbar, "标题不能为空！", Snackbar.LENGTH_LONG).show();
+                if (event.getEventDate() == null)
+                    Snackbar.make(toolbar, "事件日期不能为空！", Snackbar.LENGTH_LONG).show();
+            } else {
+                Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(EVENTMARK, event);
+                toHome.putExtra(BUNDLEMARK, bundle);
+                setResult(RESULT_OK, toHome);
+                EditEventActivity.this.finish();
+            }
 
-            Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EVENTMARK, event);
-            toHome.putExtra(BUNDLEMARK, bundle);
-            setResult(RESULT_OK, toHome);
-            EditEventActivity.this.finish();
             return true;
         }
     }
 
     //展示事件信息
     protected void showEvent() {
-        title.setText(event.getTitle());
-        remark.setText(event.getRemarks());
-        dateDetail.setText(event.dateToString());
-        loopDetail.setText(event.getLoop());
+        if (event.getTitle() != null)
+            title.setText(event.getTitle());
+        if (event.getRemarks() != null)
+            remark.setText(event.getRemarks());
+        if (event.getEventDate() != null)
+            dateDetail.setText(event.dateToString());
+        if (event.getLoop() != null)
+            loopDetail.setText(event.getLoop());
         updateHeaderBG();
     }
 
@@ -214,8 +227,8 @@ public class EditEventActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             final Calendar setter = Calendar.getInstance();
-            //如果event非空，那么应该是修改时间
-            if (event != null) {
+            //如果event.date非空，那么应该是修改时间
+            if (event.getEventDate() != null) {
                 setter.setTime(event.getEventDate());
             }
             //设置日期
@@ -223,7 +236,8 @@ public class EditEventActivity extends AppCompatActivity {
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            final int Y = year, M = monthOfYear, D = dayOfMonth;
+                            //获取的月数默认从0开始，要加1
+                            final int Y = year, M = monthOfYear + 1, D = dayOfMonth;
                             //设置时分
                             TimePickerDialog timePicker = new TimePickerDialog(EditEventActivity.this,
                                     new TimePickerDialog.OnTimeSetListener() {
@@ -299,8 +313,7 @@ public class EditEventActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
             startActivityForResult(intent, requestCode);
-            //获取到图片之后刷新header背景
-            updateHeaderBG();
+
         }
     }
 
@@ -313,9 +326,12 @@ public class EditEventActivity extends AppCompatActivity {
             //复选框的参数设置真蛋疼。。。
             setMultiChoiceArg();
 
-            labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect, new DialogInterface.OnMultiChoiceClickListener() {
+            //设置复选框内容
+            labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect,
+                    new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
                 }
             });
             //取消
@@ -360,7 +376,12 @@ public class EditEventActivity extends AppCompatActivity {
             editText.setHint(R.string.labels_add_hint);
             addLabelDialog.setView(editText);
             //取消输入
-            addLabelDialog.setNegativeButton(R.string.back, null);
+            addLabelDialog.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    labelsSelectDialog.show();
+                }
+            });
             //确认
             addLabelDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                 @Override
@@ -369,6 +390,16 @@ public class EditEventActivity extends AppCompatActivity {
                     inputLabel = inputLabel.trim();
                     if (!inputLabel.isEmpty()) {
                         labels.add(inputLabel);
+
+                        //刷新临时标签列表
+                        setMultiChoiceArg();
+                        labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect,
+                                new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                            }
+                        });
                         labelsSelectDialog.show();
                     }
                 }
@@ -398,7 +429,12 @@ public class EditEventActivity extends AppCompatActivity {
 
     //更新背景图像
     private void updateHeaderBG() {
-        headerImg.setImageBitmap(event.getEventBitmap(this));
+        if (event.getImageUri() != null) {
+            //把背景改为空，再设置背景图片
+            headerImg.setBackgroundResource(0);
+            headerImg.setImageBitmap(event.getEventBitmap(this));
+        } else
+            headerImg.setBackgroundResource(R.drawable.side_nav_bar);
     }
 
     //更新标签信息
