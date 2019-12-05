@@ -116,6 +116,7 @@ public class Event implements Serializable {
 
     //根据图片的Uri返回Bitmap
     public Bitmap getEventBitmap(@NonNull Context context) {
+
         Bitmap bgImg = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.defeault_bitmap);
         if (getImageUri() != null) {

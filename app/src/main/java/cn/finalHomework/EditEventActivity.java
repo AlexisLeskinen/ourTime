@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -94,10 +95,12 @@ public class EditEventActivity extends AppCompatActivity {
             labels = new EventLabel();
 
         //获取传入该页面的事件参数
-        Intent intent = getIntent();
-        event = (Event) intent.getSerializableExtra("event");
-        if (event == null)
-            event = new Event();
+        Bundle bundle = getIntent().getBundleExtra(BUNDLEMARK);
+        if (bundle != null) {
+            event = (Event) bundle.getSerializable(EVENTMARK);
+            if (event == null)
+                event = new Event();
+        }
 
         //初始化控件
         headerImg = findViewById(R.id.header_background);
@@ -192,10 +195,12 @@ public class EditEventActivity extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem item) {
             event.setTitle(title.getText().toString());
             event.setRemarks(remark.getText().toString());
-            if (event.getTitle() == null) {
-                Snackbar.make(toolbar, "标题不能为空！", Snackbar.LENGTH_LONG).show();
-                if (event.getEventDate() == null)
-                    Snackbar.make(toolbar, "事件日期不能为空！", Snackbar.LENGTH_LONG).show();
+            if (event.getTitle().equals("")) {
+                Toast.makeText(getApplicationContext(), "标题不能为空！", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (event.getEventDate() == null) {
+                Toast.makeText(getApplicationContext(), "事件日期不能为空！", Toast.LENGTH_SHORT).show();
+                return false;
             } else {
                 Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
@@ -328,12 +333,13 @@ public class EditEventActivity extends AppCompatActivity {
 
             //设置复选框内容
             labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect,
+                    //必须要设置OnMultiChoiceClickListener，不然选中复选框会没反应
                     new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 
-                }
-            });
+                        }
+                    });
             //取消
             labelsSelectDialog.setNegativeButton(R.string.back, null);
             //确定
@@ -395,11 +401,11 @@ public class EditEventActivity extends AppCompatActivity {
                         setMultiChoiceArg();
                         labelsSelectDialog.setMultiChoiceItems(tempLabels, hasSelect,
                                 new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 
-                            }
-                        });
+                                    }
+                                });
                         labelsSelectDialog.show();
                     }
                 }

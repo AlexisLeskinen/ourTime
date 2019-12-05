@@ -1,8 +1,6 @@
 package cn.finalHomework.ui.home;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +9,7 @@ import android.widget.ListView;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -24,6 +23,7 @@ import cn.finalHomework.data.Event;
 import cn.finalHomework.model.DataSource;
 import cn.finalHomework.model.EventsAdapter;
 
+import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
 
 public class HomeFragment extends Fragment {
@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment {
         else
             eventList = new ArrayList<>();
 
+        //读取mainactivity传进来的参数
         Bundle bundle = getArguments();
         if (bundle != null) {
             Event event = (Event) bundle.getSerializable(EVENTMARK);
@@ -57,9 +58,11 @@ public class HomeFragment extends Fragment {
 
         ListView eventListView = root.findViewById(R.id.events_list);
         if (getContext() != null) {
-            EventsAdapter eventsAdapter = new EventsAdapter(getContext(), R.layout.home_events_list, eventList);
+            EventsAdapter eventsAdapter = new EventsAdapter(getContext(),
+                    R.layout.home_events_list, eventList,requestCode);
             eventListView.setAdapter(eventsAdapter);
         }
+
 
         //添加event
         FloatingActionButton fab = root.findViewById(R.id.fab);

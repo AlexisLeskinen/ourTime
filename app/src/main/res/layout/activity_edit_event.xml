@@ -7,15 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context=".EditEventActivity">
 
-    <ImageView
-        android:id="@+id/header_background"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        app:layout_constraintBottom_toTopOf="@+id/attribute"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_time_toolbar"
-        app:srcCompat="@drawable/side_nav_bar" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_time_toolbar"
@@ -28,6 +19,17 @@
         app:menu="@menu/menu_edit_event"
         app:navigationIcon="@drawable/ic_back"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    <ImageView
+        android:id="@+id/header_background"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:layout_constraintBottom_toTopOf="@+id/attribute"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@+id/edit_time_toolbar"
+        app:srcCompat="@drawable/side_nav_bar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
