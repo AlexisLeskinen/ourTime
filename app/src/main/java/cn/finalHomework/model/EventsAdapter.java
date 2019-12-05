@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         //把图片模糊处理
         Bitmap fuzzyImg = eventItem.getEventBitmap(mContext);
-        fuzzyImg = ImageFilter.blurBitmap(mContext, fuzzyImg, 5f);
+        fuzzyImg = ImageFilter.blurBitmap(mContext, fuzzyImg, 10f);
         backgroundImg.setImageBitmap(fuzzyImg);
         eventTitle.setText(eventItem.getTitle());
         eventDate.setText(eventItem.dateToString());
@@ -69,6 +70,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         if (now.getTime().after(eventItem.getEventDate())) {
             eventStatus.setText(R.string.time_status_pass);
             intervalTime = now.getTime().getTime() - eventItem.getEventDate().getTime();
+            eventItem.nextLoop();
         } else {
             eventStatus.setText(R.string.time_status_not_yet);
             intervalTime = eventItem.getEventDate().getTime() - now.getTime().getTime();

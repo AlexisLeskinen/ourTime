@@ -44,11 +44,11 @@ import static cn.finalHomework.MainActivity.EVENTMARK;
 
 public class EditEventActivity extends AppCompatActivity {
     private static final int requestCode = 1001;
-    final static private String WEEK = "每周";
-    final static private String MONTH = "每月";
-    final static private String YEAR = "每年";
-    final static private String CUSTOM = "自定义";
-    final static private String NONE = "无";
+    final static public String WEEK = "每周";
+    final static public String MONTH = "每月";
+    final static public String YEAR = "每年";
+    final static public String CUSTOM = "自定义";
+    final static public String NONE = "无";
 
     final static private String[] cycle = new String[]{WEEK, MONTH, YEAR, CUSTOM, NONE};
 
@@ -98,9 +98,9 @@ public class EditEventActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra(BUNDLEMARK);
         if (bundle != null) {
             event = (Event) bundle.getSerializable(EVENTMARK);
-            if (event == null)
-                event = new Event();
         }
+        if (event == null)
+            event = new Event();
 
         //初始化控件
         headerImg = findViewById(R.id.header_background);

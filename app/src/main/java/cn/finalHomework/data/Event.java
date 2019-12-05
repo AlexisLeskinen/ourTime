@@ -13,10 +13,16 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import cn.finalHomework.R;
+
+import static cn.finalHomework.EditEventActivity.MONTH;
+import static cn.finalHomework.EditEventActivity.NONE;
+import static cn.finalHomework.EditEventActivity.WEEK;
+import static cn.finalHomework.EditEventActivity.YEAR;
 
 public class Event implements Serializable {
     private static final long serialVersionUID = -2834052242012114329L;
@@ -42,7 +48,7 @@ public class Event implements Serializable {
 
     public void setDate(int year, int mon, int day, int hour, int min) {
         try {
-            eventDate = sdf.parse(year + "年" + mon  + "月" + day + "日 " + hour + ":" + min);
+            eventDate = sdf.parse(year + "年" + mon + "月" + day + "日 " + hour + ":" + min);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -107,6 +113,38 @@ public class Event implements Serializable {
 
     public String getLoop() {
         return loop;
+    }
+
+    public void nextLoop() {
+        if (loop == null || loop.equals(NONE))
+            return;
+
+        Calendar now = Calendar.getInstance(),
+                newDate = Calendar.getInstance();
+        newDate.setTime(eventDate);
+        if (now.after(newDate)) {
+            switch (loop) {
+                case WEEK: {
+                    newDate.add(Calendar.DAY_OF_YEAR, 7);
+                    break;
+                }
+                case MONTH: {
+                    newDate.add(Calendar.MONTH, 1);
+                    break;
+                }
+                case YEAR: {
+                    newDate.add(Calendar.YEAR, 1);
+                    break;
+                }
+                default: {
+                    String loopTime = loop.replace("天", "");
+                    newDate.add(Calendar.DAY_OF_YEAR, Integer.parseInt(loopTime));
+                    break;
+                }
+            }
+        }
+
+        eventDate = newDate.getTime();
     }
 
     //返回格式化的时间信息
