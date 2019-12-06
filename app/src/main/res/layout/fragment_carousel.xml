@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".CarouselFragment">
+
+    <ImageView
+        android:id="@+id/carousel_img"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/side_nav_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/carousel_img_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:text="@string/edit_title_desc"
+            android:textColor="@color/bgWordColor"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/carousel_img_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carousel_img_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:text="@string/date_desc"
+            android:textColor="@color/bgWordColor"
+            android:textSize="20sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/carousel_img_timedown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carousel_img_date"
+            android:layout_centerHorizontal="true"
+            android:text="@string/time_status_not_yet"
+            android:textColor="@color/bgWordColor"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</FrameLayout>
