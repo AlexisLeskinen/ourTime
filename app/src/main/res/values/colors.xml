@@ -7,4 +7,5 @@
     <color name="titleColor">#000000</color>
     <color name="descColor">#888888</color>
     <color name="bgWordColor">#FFFFFF</color>
+    <color name="backgroundImg">#000000</color>
 </resources>

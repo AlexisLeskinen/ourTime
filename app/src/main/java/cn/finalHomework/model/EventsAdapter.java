@@ -1,6 +1,5 @@
 package cn.finalHomework.model;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,11 +15,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import cn.finalHomework.EditEventActivity;
 import cn.finalHomework.R;
@@ -28,6 +27,7 @@ import cn.finalHomework.data.Event;
 
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
+import static cn.finalHomework.HomeFragment.EVENTORDINAL;
 
 public class EventsAdapter extends ArrayAdapter<Event> {
     private Context mContext;
@@ -42,7 +42,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View itemView = layoutInflater.inflate(R.layout.home_events_list, parent, false);
 
@@ -69,15 +69,16 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         long intervalTime;
         if (now.getTime().after(eventItem.getEventDate())) {
             eventStatus.setText(R.string.time_status_pass);
-            intervalTime = now.getTime().getTime() - eventItem.getEventDate().getTime();
-            eventItem.nextLoop();
+            intervalTime = now.getTimeInMillis() - eventItem.getEventDate().getTime();
         } else {
             eventStatus.setText(R.string.time_status_not_yet);
-            intervalTime = eventItem.getEventDate().getTime() - now.getTime().getTime();
+            intervalTime = eventItem.getEventDate().getTime() - now.getTimeInMillis();
         }
         //获得两者相差的Date对象
         now.setTime(new Date(intervalTime));
-        now.add(Calendar.HOUR_OF_DAY, -8);
+        //把时间转换成标准时区
+        now.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+//        now.add(Calendar.HOUR_OF_DAY, -8);
 
         String imgTimeString = intervalTime / (1000 * 3600 * 24) + "天";
         if (intervalTime / (1000 * 3600 * 24) == 0) {
@@ -97,15 +98,21 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         wholeItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toEdit = new Intent(mContext, EditEventActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(EVENTMARK, eventItem);
-                toEdit.putExtra(BUNDLEMARK, bundle);
-                ((Activity) mContext).startActivityForResult(toEdit, requestCode);
+                turnToEdit(mContext, eventItem, position, requestCode);
             }
         });
 
         return itemView;
+    }
+
+    public static void turnToEdit(Context context, Event e, int position, int requestCode) {
+        Intent toEdit = new Intent(context, EditEventActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EVENTMARK, e);
+        //因为是修改对象，所以得把事件的序号传过去
+        bundle.putInt(EVENTORDINAL, position);
+        toEdit.putExtra(BUNDLEMARK, bundle);
+        ((Activity) context).startActivityForResult(toEdit, requestCode);
     }
 
 }

@@ -145,6 +145,9 @@ public class Event implements Serializable {
         }
 
         eventDate = newDate.getTime();
+
+        if (now.after(newDate))
+            nextLoop();
     }
 
     //返回格式化的时间信息

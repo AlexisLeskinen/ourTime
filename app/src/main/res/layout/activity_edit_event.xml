@@ -20,17 +20,6 @@
         app:navigationIcon="@drawable/ic_back"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <ImageView
-        android:id="@+id/header_background"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        app:layout_constraintBottom_toTopOf="@+id/attribute"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@+id/edit_time_toolbar"
-        app:srcCompat="@drawable/side_nav_bar" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -38,6 +27,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_time_toolbar">
+
+        <ImageView
+            android:id="@+id/header_background"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout"
+            app:srcCompat="@drawable/side_nav_bar" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -71,7 +71,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textColor="@color/bgWordColor"
-                android:textColorHint="@color/bgWordColor" />
+                android:textColorHint="@color/descColor" />
 
             <TextView
                 android:id="@+id/remark"
@@ -92,7 +92,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textColor="@color/bgWordColor"
-                android:textColorHint="@color/bgWordColor" />
+                android:textColorHint="@color/descColor" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

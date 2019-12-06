@@ -26,13 +26,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import cn.finalHomework.data.Event;
 import cn.finalHomework.data.EventLabel;
@@ -40,18 +36,20 @@ import cn.finalHomework.model.DataSource;
 
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
+import static cn.finalHomework.HomeFragment.EVENTORDINAL;
 
 
 public class EditEventActivity extends AppCompatActivity {
     private static final int requestCode = 1001;
+    //循环设置参数
     final static public String WEEK = "每周";
     final static public String MONTH = "每月";
     final static public String YEAR = "每年";
     final static public String CUSTOM = "自定义";
     final static public String NONE = "无";
-
     final static private String[] cycle = new String[]{WEEK, MONTH, YEAR, CUSTOM, NONE};
 
+    //控件变量
     private EditText title, remark;
     private TextView dateDetail, loopDetail, labelsDetail;
     private LinearLayout date, loop, photo, tag;
@@ -59,11 +57,15 @@ public class EditEventActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private Event event;
+    private int eventOrder;
     private DataSource labelData;
     private EventLabel labels;
 
+    //复选框参数
     boolean[] hasSelect;
     String[] tempLabels;
+
+    Bundle bundle;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -95,9 +97,10 @@ public class EditEventActivity extends AppCompatActivity {
             labels = new EventLabel();
 
         //获取传入该页面的事件参数
-        Bundle bundle = getIntent().getBundleExtra(BUNDLEMARK);
+        bundle = getIntent().getBundleExtra(BUNDLEMARK);
         if (bundle != null) {
             event = (Event) bundle.getSerializable(EVENTMARK);
+            eventOrder = bundle.getInt(EVENTORDINAL, -1);
         }
         if (event == null)
             event = new Event();
@@ -203,8 +206,10 @@ public class EditEventActivity extends AppCompatActivity {
                 return false;
             } else {
                 Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putSerializable(EVENTMARK, event);
+                if (eventOrder != -1)
+                    bundle.putInt(EVENTORDINAL, eventOrder);
                 toHome.putExtra(BUNDLEMARK, bundle);
                 setResult(RESULT_OK, toHome);
                 EditEventActivity.this.finish();
@@ -436,8 +441,9 @@ public class EditEventActivity extends AppCompatActivity {
     //更新背景图像
     private void updateHeaderBG() {
         if (event.getImageUri() != null) {
-            //把背景改为空，再设置背景图片
-            headerImg.setBackgroundResource(0);
+            //把背景改为黑色，调节透明度，再设置背景图片
+//            headerImg.setBackgroundColor(ContextCompat.getColor(this,R.color.backgroundImg));
+            headerImg.setAlpha(0.8f);
             headerImg.setImageBitmap(event.getEventBitmap(this));
         } else
             headerImg.setBackgroundResource(R.drawable.side_nav_bar);
