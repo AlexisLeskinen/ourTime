@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
             android:text="@string/edit_title_desc"
-            android:textColor="@color/bgWordColor"
+            android:textColor="@color/backgroundWord"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="5dp"
             android:text="@string/date_desc"
-            android:textColor="@color/bgWordColor"
+            android:textColor="@color/backgroundWord"
             android:textSize="20sp"
             android:textStyle="normal" />
 
@@ -49,7 +49,7 @@
             android:layout_below="@+id/carousel_img_date"
             android:layout_centerHorizontal="true"
             android:text="@string/time_status_not_yet"
-            android:textColor="@color/bgWordColor"
+            android:textColor="@color/backgroundWord"
             android:textSize="25sp"
             android:textStyle="bold" />
     </RelativeLayout>

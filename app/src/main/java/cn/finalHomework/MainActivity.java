@@ -3,18 +3,11 @@ package cn.finalHomework;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -31,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 77722;
     public static String BUNDLEMARK = "BUNDLE";
     public static String EVENTMARK = "EVENT";
+    public static String DELETEMARK = "DELETE";
 
     private AppBarConfiguration mAppBarConfiguration;
     private NavController navController;
@@ -44,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
         if (data != null) {
             bundle = data.getBundleExtra(BUNDLEMARK);
             if (bundle != null) {
-                Event event = (Event) bundle.getSerializable(EVENTMARK);
-                //将新的event对象传给Fragment
-                if (event != null) {
-                    bundle.putSerializable(EVENTMARK, event);
+//                Event event = (Event) bundle.getSerializable(EVENTMARK);
+//                //将新的event对象传给Fragment
+//                if (event != null) {
+//                    bundle.putSerializable(EVENTMARK, event);
                     navController.setGraph(R.navigation.mobile_navigation, bundle);
-                }
+//                }
             }
         }
     }

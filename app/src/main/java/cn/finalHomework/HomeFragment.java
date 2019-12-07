@@ -28,6 +28,7 @@ import cn.finalHomework.model.EventsAdapter;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
+import static cn.finalHomework.MainActivity.DELETEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
 
 public class HomeFragment extends Fragment {
@@ -60,6 +61,11 @@ public class HomeFragment extends Fragment {
                 else
                     //如果页面返回了新event对象，将他添加到eventList中
                     eventList.add(event);
+            }
+            //检测到删除标志，则删除事件
+            int removeId =bundle.getInt(DELETEMARK, -1);
+            if (removeId != -1){
+                eventList.remove(removeId);
             }
         }
 

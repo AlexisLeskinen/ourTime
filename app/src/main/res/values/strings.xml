@@ -30,6 +30,10 @@
     <string name="labels_desc">暂无</string>
 
     <string name="back">取消</string>
+    <string name="edit">修改</string>
+    <string name="share">分享</string>
+    <string name="delete">删除</string>
+    <string name="delete_event">是否删除该事件</string>
     <string name="confirm">确认</string>
 
     <string name="time_status_pass">已经</string>

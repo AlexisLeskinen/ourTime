@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_title"
-                android:textColor="@color/bgWordColor" />
+                android:textColor="@color/backgroundWord" />
 
             <EditText
                 android:id="@+id/title_edit"
@@ -70,16 +70,16 @@
                 android:maxLength="20"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textColor="@color/bgWordColor"
-                android:textColorHint="@color/descColor" />
+                android:textColor="@color/backgroundWord"
+                android:textColorHint="@color/descWord" />
 
             <TextView
                 android:id="@+id/remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_remark"
-                android:textColor="@color/bgWordColor"
-                android:textColorHint="@color/bgWordColor" />
+                android:textColor="@color/backgroundWord"
+                android:textColorHint="@color/backgroundWord" />
 
             <EditText
                 android:id="@+id/remark_edit"
@@ -91,8 +91,8 @@
                 android:maxLength="20"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textColor="@color/bgWordColor"
-                android:textColorHint="@color/descColor" />
+                android:textColor="@color/backgroundWord"
+                android:textColorHint="@color/descWord" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -134,14 +134,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/date"
-                    android:textColor="@color/titleColor" />
+                    android:textColor="@color/titleWord" />
 
                 <TextView
                     android:id="@+id/date_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/date_desc"
-                    android:textColor="@color/descColor" />
+                    android:textColor="@color/descWord" />
             </LinearLayout>
         </LinearLayout>
 
@@ -171,14 +171,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/loop"
-                    android:textColor="@color/titleColor" />
+                    android:textColor="@color/titleWord" />
 
                 <TextView
                     android:id="@+id/loop_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/loop_desc"
-                    android:textColor="@color/descColor" />
+                    android:textColor="@color/descWord" />
             </LinearLayout>
         </LinearLayout>
 
@@ -208,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/photo"
-                    android:textColor="@color/titleColor" />
+                    android:textColor="@color/titleWord" />
             </LinearLayout>
         </LinearLayout>
 
@@ -238,14 +238,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/labels"
-                    android:textColor="@color/titleColor" />
+                    android:textColor="@color/titleWord" />
 
                 <TextView
                     android:id="@+id/labels_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/labels_desc"
-                    android:textColor="@color/descColor" />
+                    android:textColor="@color/descWord" />
             </LinearLayout>
         </LinearLayout>
 

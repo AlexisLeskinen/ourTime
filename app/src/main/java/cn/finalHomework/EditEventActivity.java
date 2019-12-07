@@ -160,12 +160,12 @@ public class EditEventActivity extends AppCompatActivity {
      *
      * @param activity
      */
-    private void addStatusViewWithColor(Activity activity) {
+    public static void addStatusViewWithColor(Activity activity) {
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         View statusBarView = new View(activity);
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 getStatusBarHeight(activity));
-        statusBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        statusBarView.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary));
         contentView.addView(statusBarView, lp);
     }
 
@@ -174,7 +174,7 @@ public class EditEventActivity extends AppCompatActivity {
      *
      * @return
      */
-    public int getStatusBarHeight(Activity activity) {
+    public static int getStatusBarHeight(Activity activity) {
         int result = 0;
         //获取状态栏高度的资源id
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -205,13 +205,16 @@ public class EditEventActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "事件日期不能为空！", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
-                Intent toHome = new Intent(EditEventActivity.this, MainActivity.class);
+                Intent toHome = new Intent(EditEventActivity.this, MainActivity.class),
+                        toDetail = new Intent(EditEventActivity.this, EventDetailActivity.class);
                 bundle = new Bundle();
                 bundle.putSerializable(EVENTMARK, event);
                 if (eventOrder != -1)
                     bundle.putInt(EVENTORDINAL, eventOrder);
                 toHome.putExtra(BUNDLEMARK, bundle);
+                toDetail.putExtra(BUNDLEMARK, bundle);
                 setResult(RESULT_OK, toHome);
+                setResult(RESULT_OK, toDetail);
                 EditEventActivity.this.finish();
             }
 

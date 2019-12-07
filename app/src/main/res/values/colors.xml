@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#0398DB</color>
     <color name="colorAccent">#03A9F4</color>
 
-    <color name="titleColor">#000000</color>
-    <color name="descColor">#888888</color>
-    <color name="bgWordColor">#FFFFFF</color>
+    <color name="titleWord">#000000</color>
+    <color name="descWord">#888888</color>
+    <color name="backgroundWord">#FFFFFF</color>
+    <color name="iconToolbar">#FFFFFF</color>
     <color name="backgroundImg">#000000</color>
 </resources>

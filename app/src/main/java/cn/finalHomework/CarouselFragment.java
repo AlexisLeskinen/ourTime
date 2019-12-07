@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,24 +71,23 @@ public class CarouselFragment extends Fragment {
         date.setText(event.dateToString());
 
         //获取现在和时间的时间
-        final Calendar now = Calendar.getInstance(),
+        final Calendar interval = Calendar.getInstance(),
                 eventDate = Calendar.getInstance();
         eventDate.setTime(event.getEventDate());
 
         //计算时间差，获取新的Calender对象
-        long intervalTime = now.after(eventDate) ?
-                now.getTimeInMillis() - eventDate.getTimeInMillis()
-                : eventDate.getTimeInMillis() - now.getTimeInMillis();
-        now.setTime(new Date(intervalTime));
+        long intervalTime = Math.abs(interval.getTimeInMillis() - eventDate.getTimeInMillis());
+        interval.setTime(new Date(intervalTime));
+        //把时间转换成标准时区
+        interval.add(Calendar.HOUR_OF_DAY,-8);
 
-
-        final String dayString = intervalTime / (1000 * 3600 * 24) + "天";
 
         // 构建Runnable对象，在runnable中更新界面
         final Runnable updateCountDown = new Runnable() {
             @Override
             public void run() {
-                timeDown.setText(dayString + sdf.format(now.getTime()));
+                String dayString = Math.abs(interval.getTimeInMillis()) / (1000 * 3600 * 24) + " 天";
+                timeDown.setText(dayString + sdf.format(interval.getTime()));
             }
         };
         //为倒计时独立建立一个线程
@@ -95,8 +95,10 @@ public class CarouselFragment extends Fragment {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                Calendar now = Calendar.getInstance();
+                int addSecond = now.after(eventDate) ? 1 : -1;
+                interval.add(Calendar.SECOND, addSecond);
                 handler.post(updateCountDown);
-                now.add(Calendar.SECOND, -1);
             }
         }, 0, 1000);
 

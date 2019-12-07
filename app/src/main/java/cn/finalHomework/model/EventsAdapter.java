@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import cn.finalHomework.EditEventActivity;
+import cn.finalHomework.EventDetailActivity;
 import cn.finalHomework.R;
 import cn.finalHomework.data.Event;
 
@@ -66,19 +66,17 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         //左侧图片提示信息
         Calendar now = Calendar.getInstance();
-        long intervalTime;
+
         if (now.getTime().after(eventItem.getEventDate())) {
             eventStatus.setText(R.string.time_status_pass);
-            intervalTime = now.getTimeInMillis() - eventItem.getEventDate().getTime();
         } else {
             eventStatus.setText(R.string.time_status_not_yet);
-            intervalTime = eventItem.getEventDate().getTime() - now.getTimeInMillis();
         }
+        long intervalTime = Math.abs(now.getTimeInMillis() - eventItem.getEventDate().getTime());
         //获得两者相差的Date对象
         now.setTime(new Date(intervalTime));
         //把时间转换成标准时区
         now.setTimeZone(TimeZone.getTimeZone("GMT+0"));
-//        now.add(Calendar.HOUR_OF_DAY, -8);
 
         String imgTimeString = intervalTime / (1000 * 3600 * 24) + "天";
         if (intervalTime / (1000 * 3600 * 24) == 0) {
@@ -93,7 +91,6 @@ public class EventsAdapter extends ArrayAdapter<Event> {
 
         eventDateImg.setText(imgTimeString);
 
-
         //点击进入修改event
         wholeItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,13 +103,13 @@ public class EventsAdapter extends ArrayAdapter<Event> {
     }
 
     public static void turnToEdit(Context context, Event e, int position, int requestCode) {
-        Intent toEdit = new Intent(context, EditEventActivity.class);
+        Intent toDetail = new Intent(context, EventDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(EVENTMARK, e);
         //因为是修改对象，所以得把事件的序号传过去
         bundle.putInt(EVENTORDINAL, position);
-        toEdit.putExtra(BUNDLEMARK, bundle);
-        ((Activity) context).startActivityForResult(toEdit, requestCode);
+        toDetail.putExtra(BUNDLEMARK, bundle);
+        ((Activity) context).startActivityForResult(toDetail, requestCode);
     }
 
 }
