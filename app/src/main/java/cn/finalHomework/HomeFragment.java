@@ -63,19 +63,26 @@ public class HomeFragment extends Fragment {
                     eventList.add(event);
             }
             //检测到删除标志，则删除事件
-            int removeId =bundle.getInt(DELETEMARK, -1);
-            if (removeId != -1){
+            int removeId = bundle.getInt(DELETEMARK, -1);
+            if (removeId != -1) {
                 eventList.remove(removeId);
             }
         }
+
+        //根据设置的循环参数设置下次提醒日期
+        if (!eventList.isEmpty())
+            for (Event e : eventList)
+                e.nextLoop();
 
         //顶部走马灯
         ViewPager carousel = root.findViewById(R.id.home_banner);
         CarouselAdapter homeBannerAdapter = new CarouselAdapter(getChildFragmentManager(),
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         ArrayList<Fragment> carouselList = new ArrayList<>();
-        for (int e = 0; e < eventList.size(); e++) {
-            carouselList.add(new CarouselFragment(getContext(), eventList.get(e), e, requestCode));
+        //走马灯内容初始化，最多为5个
+        int maxCarousel = eventList.size() >= 5 ? 5 : eventList.size();
+        for (int e = 0; e < maxCarousel; e++) {
+            carouselList.add(new CarouselFragment(getContext(), eventList.get(e), e, requestCode, true));
         }
         homeBannerAdapter.setFragmentList(carouselList);
         carousel.setAdapter(homeBannerAdapter);

@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/events_list_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="10dp"
-    app:layout_constraintCircleRadius="20dp">
+    android:paddingTop="15dp">
 
     <FrameLayout
         android:id="@+id/frame_item_img_info"
         android:layout_width="80dp"
-        android:layout_height="80dp">
+        android:layout_height="80dp"
+        android:background="@drawable/home_event_list_style"
+        >
 
         <ImageView
             android:id="@+id/item_img"

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -41,16 +42,19 @@ public class CarouselFragment extends Fragment {
     private int eventOrder;
     private Context mContext;
     private int requestCode;
+    private boolean isClickable;
     static private SimpleDateFormat sdf =
             new SimpleDateFormat(" H小时 m分钟 s秒", Locale.getDefault());
 
     private Handler handler;
 
-    public CarouselFragment(Context context, Event event, int eventOrder, int requestCode) {
+    public CarouselFragment(Context context, Event event, int eventOrder, int requestCode,
+                            boolean isClickable) {
         this.mContext = context;
         this.event = event;
         this.eventOrder = eventOrder;
         this.requestCode = requestCode;
+        this.isClickable = isClickable;
         //创建属于主线程的handler
         handler = new Handler();
     }
@@ -79,7 +83,7 @@ public class CarouselFragment extends Fragment {
         long intervalTime = Math.abs(interval.getTimeInMillis() - eventDate.getTimeInMillis());
         interval.setTime(new Date(intervalTime));
         //把时间转换成标准时区
-        interval.add(Calendar.HOUR_OF_DAY,-8);
+        interval.add(Calendar.HOUR_OF_DAY, -8);
 
 
         // 构建Runnable对象，在runnable中更新界面
@@ -102,12 +106,13 @@ public class CarouselFragment extends Fragment {
             }
         }, 0, 1000);
 
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                turnToEdit(mContext, event, eventOrder, requestCode);
-            }
-        });
+        if (isClickable)
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    turnToEdit(mContext, event, eventOrder, requestCode);
+                }
+            });
 
 
         return view;
