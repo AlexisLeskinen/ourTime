@@ -171,4 +171,5 @@ public class Event implements Serializable {
         }
         return bgImg;
     }
+
 }

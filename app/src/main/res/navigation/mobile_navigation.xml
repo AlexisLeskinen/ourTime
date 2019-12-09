@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/nav_theme"
-        android:name="cn.finalHomework.ui.theme.ThemeFragment"
+        android:name="cn.finalHomework.ThemeFragment"
         android:label="@string/menu_theme"
         tools:layout="@layout/fragment_theme" />
 
