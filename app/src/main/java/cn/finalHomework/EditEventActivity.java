@@ -3,7 +3,6 @@ package cn.finalHomework;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +10,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -39,7 +37,6 @@ import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
 import static cn.finalHomework.HomeFragment.EVENTORDINAL;
 import static cn.finalHomework.MainActivity.getThemeColor;
-import static cn.finalHomework.ThemeFragment.backgroundColor;
 import static cn.finalHomework.ThemeFragment.themeColor;
 
 

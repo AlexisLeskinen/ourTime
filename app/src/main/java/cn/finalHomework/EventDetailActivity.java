@@ -5,18 +5,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,7 +37,6 @@ import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.DELETEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
 import static cn.finalHomework.MainActivity.getThemeColor;
-import static cn.finalHomework.ThemeFragment.backgroundColor;
 import static cn.finalHomework.ThemeFragment.themeColor;
 
 
@@ -56,6 +61,14 @@ public class EventDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "Tips";
+            String channelName = "日期提醒";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            createNotificationChannel(channelId, channelName, importance);
+
+        }
 
         //主题颜色设置
         int bgColor = getThemeColor(getSharedPreferences(themeColor, MODE_PRIVATE));
@@ -96,6 +109,21 @@ public class EventDetailActivity extends AppCompatActivity {
         carouselList.add(new CarouselFragment(this, event, eventOrder, requestCode, false));
         detailBannerAdapter.setFragmentList(carouselList);
         detailHeader.setAdapter(detailBannerAdapter);
+
+        Switch notification = findViewById(R.id.switch_notices);
+        notification.setChecked(event.getNotificationStatus());
+        notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    sendTipsMsg(buttonView);
+                    event.setNotificationStatus(isChecked);
+                }else{
+                    event.setNotificationStatus(isChecked);
+                    cancelNotification();
+                }
+            }
+        });
 
     }
 
@@ -152,4 +180,32 @@ public class EventDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName, int importance) {
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
+                NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    private void sendTipsMsg(View view) {
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Notification notification = new NotificationCompat.Builder(this, "Tips")
+                .setContentTitle(event.getTitle())
+                .setContentText(event.dateToString())
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(event.getEventBitmap(this))
+                .build();
+        //设置常驻通知栏
+        notification.flags = Notification.FLAG_ONGOING_EVENT;
+
+        manager.notify(eventOrder, notification);
+    }
+
+    // 取消通知
+    private void cancelNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.cancel(eventOrder);
+    }
 }

@@ -33,6 +33,7 @@ public class Event implements Serializable {
     private String remarks;             //备注
     private ArrayList<String> labels;    //标签
     private String loop;                //循环设置
+    private boolean hasSetNotices;      //是否设置通知栏显示
 
     static private SimpleDateFormat sdf =
             new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
@@ -44,6 +45,7 @@ public class Event implements Serializable {
         remarks = null;
         labels = null;
         loop = null;
+        hasSetNotices = false;
     }
 
     public void setDate(int year, int mon, int day, int hour, int min) {
@@ -68,6 +70,10 @@ public class Event implements Serializable {
 
     public void setImageUri(String imgUrl) {
         imageUri = imgUrl;
+    }
+
+    public void setNotificationStatus(boolean status) {
+        hasSetNotices = status;
     }
 
     public void addLabel(String label) {
@@ -113,6 +119,10 @@ public class Event implements Serializable {
 
     public String getLoop() {
         return loop;
+    }
+
+    public boolean getNotificationStatus() {
+        return hasSetNotices;
     }
 
     public void nextLoop() {
