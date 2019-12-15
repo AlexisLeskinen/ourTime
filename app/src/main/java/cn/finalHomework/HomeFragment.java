@@ -1,7 +1,7 @@
 package cn.finalHomework;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -19,17 +18,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import cn.finalHomework.EditEventActivity;
-import cn.finalHomework.R;
 import cn.finalHomework.data.Event;
 import cn.finalHomework.model.CarouselAdapter;
 import cn.finalHomework.model.DataSource;
 import cn.finalHomework.model.EventsAdapter;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.DELETEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
+import static cn.finalHomework.MainActivity.getThemeColor;
+import static cn.finalHomework.ThemeFragment.backgroundColor;
+import static cn.finalHomework.ThemeFragment.themeColor;
 
 public class HomeFragment extends Fragment {
     final public static String EVENTORDINAL = "ORDER";
@@ -96,8 +97,12 @@ public class HomeFragment extends Fragment {
         }
 
 
-        //添加event
+
+        //设置悬浮按钮颜色
+        int bgColor = getThemeColor(getContext().getSharedPreferences(themeColor, MODE_PRIVATE));
         FloatingActionButton fab = root.findViewById(R.id.fab);
+        fab.setBackgroundTintList(ColorStateList.valueOf(bgColor));
+        //添加event监听
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

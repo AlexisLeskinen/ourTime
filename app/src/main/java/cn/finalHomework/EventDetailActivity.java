@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,9 @@ import static cn.finalHomework.HomeFragment.EVENTORDINAL;
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.DELETEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
+import static cn.finalHomework.MainActivity.getThemeColor;
+import static cn.finalHomework.ThemeFragment.backgroundColor;
+import static cn.finalHomework.ThemeFragment.themeColor;
 
 
 public class EventDetailActivity extends AppCompatActivity {
@@ -53,7 +57,9 @@ public class EventDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
 
-        addStatusViewWithColor(this);
+        //主题颜色设置
+        int bgColor = getThemeColor(getSharedPreferences(themeColor, MODE_PRIVATE));
+        addStatusViewWithColor(this, bgColor);
 
         //获取传入该页面的事件参数
         bundle = getIntent().getBundleExtra(BUNDLEMARK);
@@ -80,6 +86,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 EventDetailActivity.this.finish();
             }
         });
+        toolbar.setBackgroundColor(bgColor);
 
         //事件详情页面的倒计时，采用和home一样的方法实现
         ViewPager detailHeader = this.findViewById(R.id.detail_header);

@@ -2,6 +2,7 @@ package cn.finalHomework;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -18,7 +19,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import cn.finalHomework.data.Event;
+import static cn.finalHomework.EditEventActivity.addStatusViewWithColor;
+import static cn.finalHomework.ThemeFragment.backgroundColor;
+import static cn.finalHomework.ThemeFragment.themeColor;
 
 public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 77722;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     //向Fragment传参用
     private Bundle bundle;
+    int bgColor;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -38,12 +42,7 @@ public class MainActivity extends AppCompatActivity {
         if (data != null) {
             bundle = data.getBundleExtra(BUNDLEMARK);
             if (bundle != null) {
-//                Event event = (Event) bundle.getSerializable(EVENTMARK);
-//                //将新的event对象传给Fragment
-//                if (event != null) {
-//                    bundle.putSerializable(EVENTMARK, event);
-                    navController.setGraph(R.navigation.mobile_navigation, bundle);
-//                }
+                navController.setGraph(R.navigation.mobile_navigation, bundle);
             }
         }
     }
@@ -51,14 +50,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //加载主题颜色
+        SharedPreferences sp = getSharedPreferences(themeColor, MODE_PRIVATE);
+        bgColor = getThemeColor(sp);
+
         setContentView(R.layout.activity_main);
 
+        addStatusViewWithColor(this, bgColor);
         //顶部工具栏
         Toolbar toolbar = findViewById(R.id.main_top_bar);
         setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(bgColor);
         //左侧抽屉
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.getHeaderView(0).setBackgroundColor(bgColor);
 
         //将每个菜单ID作为一组ID传递，因为每个菜单都应该被视为顶级目的地。
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -80,5 +87,14 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    //获取动态主题颜色
+    public static int getThemeColor(SharedPreferences sp) {
+        int bgColor = 0xFF03A9F4;
+        if (sp != null) {
+            bgColor = sp.getInt(backgroundColor, bgColor);
+        }
+        return bgColor;
     }
 }

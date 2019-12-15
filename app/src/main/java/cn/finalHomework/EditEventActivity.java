@@ -11,6 +11,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -37,6 +38,9 @@ import cn.finalHomework.model.DataSource;
 import static cn.finalHomework.MainActivity.BUNDLEMARK;
 import static cn.finalHomework.MainActivity.EVENTMARK;
 import static cn.finalHomework.HomeFragment.EVENTORDINAL;
+import static cn.finalHomework.MainActivity.getThemeColor;
+import static cn.finalHomework.ThemeFragment.backgroundColor;
+import static cn.finalHomework.ThemeFragment.themeColor;
 
 
 public class EditEventActivity extends AppCompatActivity {
@@ -48,6 +52,7 @@ public class EditEventActivity extends AppCompatActivity {
     final static public String CUSTOM = "自定义";
     final static public String NONE = "无";
     final static private String[] cycle = new String[]{WEEK, MONTH, YEAR, CUSTOM, NONE};
+    private int color;
 
     //控件变量
     private EditText title, remark;
@@ -55,6 +60,7 @@ public class EditEventActivity extends AppCompatActivity {
     private LinearLayout date, loop, photo, tag;
     private ImageView headerImg;
     private Toolbar toolbar;
+
 
     private Event event;
     private int eventOrder;
@@ -86,7 +92,8 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         //设置状态栏颜色
-        addStatusViewWithColor(this);
+        color = getThemeColor(getSharedPreferences(themeColor, MODE_PRIVATE));
+        addStatusViewWithColor(this, color);
 
         //获取标签数据
         labelData = new DataSource(this);
@@ -142,6 +149,7 @@ public class EditEventActivity extends AppCompatActivity {
         });
         //确认键
         toolbar.setOnMenuItemClickListener(new ConfirmListener());
+        toolbar.setBackgroundColor(color);
 
         showEvent();
     }
@@ -160,12 +168,12 @@ public class EditEventActivity extends AppCompatActivity {
      *
      * @param activity
      */
-    public static void addStatusViewWithColor(Activity activity) {
+    public static void addStatusViewWithColor(Activity activity, int color) {
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         View statusBarView = new View(activity);
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 getStatusBarHeight(activity));
-        statusBarView.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+        statusBarView.setBackgroundColor(color);
         contentView.addView(statusBarView, lp);
     }
 
@@ -449,7 +457,7 @@ public class EditEventActivity extends AppCompatActivity {
             headerImg.setAlpha(0.8f);
             headerImg.setImageBitmap(event.getEventBitmap(this));
         } else
-            headerImg.setBackgroundResource(R.drawable.side_nav_bar);
+            headerImg.setBackgroundColor(color);
     }
 
     //更新标签信息
