@@ -54,6 +54,8 @@ public class EventDetailActivity extends AppCompatActivity {
             bundle = data.getBundleExtra(BUNDLEMARK);
             event = (Event) bundle.getSerializable(EVENTMARK);
             eventOrder = bundle.getInt(EVENTORDINAL);
+
+            setHeader();
         }
     }
 
@@ -102,23 +104,17 @@ public class EventDetailActivity extends AppCompatActivity {
         toolbar.setBackgroundColor(bgColor);
 
         //事件详情页面的倒计时，采用和home一样的方法实现
-        ViewPager detailHeader = this.findViewById(R.id.detail_header);
-        CarouselAdapter detailBannerAdapter = new CarouselAdapter(getSupportFragmentManager(),
-                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        ArrayList<Fragment> carouselList = new ArrayList<>();
-        carouselList.add(new CarouselFragment(this, event, eventOrder, requestCode, false));
-        detailBannerAdapter.setFragmentList(carouselList);
-        detailHeader.setAdapter(detailBannerAdapter);
+        setHeader();
 
         Switch notification = findViewById(R.id.switch_notices);
         notification.setChecked(event.getNotificationStatus());
         notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     sendTipsMsg(buttonView);
                     event.setNotificationStatus(isChecked);
-                }else{
+                } else {
                     event.setNotificationStatus(isChecked);
                     cancelNotification();
                 }
@@ -161,6 +157,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 deleteDialog.show();
                 break;
             }
+            //修改对象
             case R.id.icon_edit: {
                 Intent toDetail = new Intent(this, EditEventActivity.class);
                 Bundle bundle = new Bundle();
@@ -171,6 +168,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 startActivityForResult(toDetail, requestCode);
                 break;
             }
+            //分享
             case R.id.icon_share: {
                 Toast.makeText(getApplicationContext(), "分享", Toast.LENGTH_SHORT).show();
                 break;
@@ -180,6 +178,7 @@ public class EventDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //状态栏通知权限版本检测
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(String channelId, String channelName, int importance) {
         NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
@@ -188,6 +187,7 @@ public class EventDetailActivity extends AppCompatActivity {
         notificationManager.createNotificationChannel(channel);
     }
 
+    //发送通知
     private void sendTipsMsg(View view) {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new NotificationCompat.Builder(this, "Tips")
@@ -207,5 +207,18 @@ public class EventDetailActivity extends AppCompatActivity {
     private void cancelNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         manager.cancel(eventOrder);
+    }
+
+    /**
+     * 设置倒计时图片
+     */
+    private void setHeader() {
+        ViewPager detailHeader = this.findViewById(R.id.detail_header);
+        CarouselAdapter detailBannerAdapter = new CarouselAdapter(getSupportFragmentManager(),
+                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        ArrayList<Fragment> carouselList = new ArrayList<>();
+        carouselList.add(new CarouselFragment(this, event, eventOrder, requestCode, false));
+        detailBannerAdapter.setFragmentList(carouselList);
+        detailHeader.setAdapter(detailBannerAdapter);
     }
 }

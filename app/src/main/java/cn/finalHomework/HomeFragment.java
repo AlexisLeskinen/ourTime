@@ -54,14 +54,14 @@ public class HomeFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             Event event = (Event) bundle.getSerializable(EVENTMARK);
-            int eventOrder = bundle.getInt(EVENTORDINAL);
+            int eventOrder = bundle.getInt(EVENTORDINAL, -1);
             if (event != null) {
-                if (eventList.get(eventOrder) != null)
+                if (eventOrder >= 0 && eventList.get(eventOrder) != null) {
                     eventList.set(eventOrder, event);
-
-                else
+                } else {
                     //如果页面返回了新event对象，将他添加到eventList中
                     eventList.add(event);
+                }
             }
             //检测到删除标志，则删除事件
             int removeId = bundle.getInt(DELETEMARK, -1);
@@ -95,7 +95,6 @@ public class HomeFragment extends Fragment {
                     R.layout.home_events_list, eventList, requestCode);
             eventListView.setAdapter(eventsAdapter);
         }
-
 
 
         //设置悬浮按钮颜色

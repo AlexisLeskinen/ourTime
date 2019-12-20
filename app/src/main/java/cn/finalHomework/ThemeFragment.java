@@ -29,7 +29,7 @@ public class ThemeFragment extends Fragment {
     private SharedPreferences.Editor spe;
     private ColorSeekBar mColorSeekBar;
 
-    int bgColor;
+    int bgColor = 0xFF03A9F4;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -63,8 +63,6 @@ public class ThemeFragment extends Fragment {
                 //保存颜色之后立即更改现在的颜色参数
                 bgColor = getThemeColor(sp);
                 Toast.makeText(getContext(), "主题设置成功！", Toast.LENGTH_SHORT).show();
-                //然后关闭当前Fragment
-                getActivity().onBackPressed();
             }
         });
 

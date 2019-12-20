@@ -60,7 +60,7 @@ public class EditEventActivity extends AppCompatActivity {
 
 
     private Event event;
-    private int eventOrder;
+    private int eventOrder = -1;
     private DataSource labelData;
     private EventLabel labels;
 
@@ -104,7 +104,7 @@ public class EditEventActivity extends AppCompatActivity {
         bundle = getIntent().getBundleExtra(BUNDLEMARK);
         if (bundle != null) {
             event = (Event) bundle.getSerializable(EVENTMARK);
-            eventOrder = bundle.getInt(EVENTORDINAL, -1);
+            eventOrder = bundle.getInt(EVENTORDINAL, eventOrder);
         }
         if (event == null)
             event = new Event();
@@ -216,6 +216,7 @@ public class EditEventActivity extends AppCompatActivity {
                 bundle.putSerializable(EVENTMARK, event);
                 if (eventOrder != -1)
                     bundle.putInt(EVENTORDINAL, eventOrder);
+
                 toHome.putExtra(BUNDLEMARK, bundle);
                 toDetail.putExtra(BUNDLEMARK, bundle);
                 setResult(RESULT_OK, toHome);

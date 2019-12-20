@@ -48,6 +48,15 @@ public class Event implements Serializable {
         hasSetNotices = false;
     }
 
+    /**
+     * 设置事件的时间
+     *
+     * @param year 年
+     * @param mon  月
+     * @param day  日
+     * @param hour 时
+     * @param min  分
+     */
     public void setDate(int year, int mon, int day, int hour, int min) {
         try {
             eventDate = sdf.parse(year + "年" + mon + "月" + day + "日 " + hour + ":" + min);
@@ -56,26 +65,57 @@ public class Event implements Serializable {
         }
     }
 
+    /**
+     * 用Date对象设置时间
+     *
+     * @param date 目标Date对象
+     */
     public void setDate(Date date) {
         eventDate = date;
     }
 
+    /**
+     * 设置标题
+     *
+     * @param title 标题
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * 设置备注
+     *
+     * @param remarks 备注
+     */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 
+    /**
+     * 保持选择的背景图的Uri
+     *
+     * @param imgUrl Uri的String
+     */
     public void setImageUri(String imgUrl) {
         imageUri = imgUrl;
     }
 
+    /**
+     * 记录事件是否已经常驻
+     * 通知栏
+     *
+     * @param status true为已经常驻
+     */
     public void setNotificationStatus(boolean status) {
         hasSetNotices = status;
     }
 
+    /**
+     * 添加事件标签
+     *
+     * @param label 要添加的标签
+     */
     public void addLabel(String label) {
         if (labels == null)
             labels = new ArrayList<>();
@@ -84,6 +124,11 @@ public class Event implements Serializable {
             labels.add(label);
     }
 
+    /**
+     * 删除标签
+     *
+     * @param label 要删除的标签
+     */
     public void deleteLabel(String label) {
         if (labels != null && labels.contains(label)) {
             labels.remove(label);
@@ -93,6 +138,11 @@ public class Event implements Serializable {
         }
     }
 
+    /**
+     * 循环周期设置
+     *
+     * @param loop 循环周期，为字符串
+     */
     public void setLoop(String loop) {
         this.loop = loop;
     }
@@ -125,6 +175,10 @@ public class Event implements Serializable {
         return hasSetNotices;
     }
 
+    /**
+     * 根据事件的循环设置
+     * 自动把事件更新到下一个时间
+     */
     public void nextLoop() {
         if (loop == null || loop.equals(NONE))
             return;
@@ -160,12 +214,21 @@ public class Event implements Serializable {
             nextLoop();
     }
 
-    //返回格式化的时间信息
+    /**
+     * 返回格式化的时间信息
+     *
+     * @return yyyy年MM月dd日 HH:mm
+     */
     public String dateToString() {
         return sdf.format(getEventDate());
     }
 
-    //根据图片的Uri返回Bitmap
+    /**
+     * 根据图片的Uri返回Bitmap
+     *
+     * @param context 当前Activity Context
+     * @return 目标图片的Bitmap
+     */
     public Bitmap getEventBitmap(@NonNull Context context) {
 
         Bitmap bgImg = BitmapFactory.decodeResource(context.getResources(),

@@ -1,17 +1,11 @@
 package cn.finalHomework;
 
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.finalHomework.data.Event;
 
-import static cn.finalHomework.HomeFragment.EVENTORDINAL;
-import static cn.finalHomework.MainActivity.BUNDLEMARK;
-import static cn.finalHomework.MainActivity.EVENTMARK;
 import static cn.finalHomework.model.EventsAdapter.turnToEdit;
 
 
@@ -48,6 +38,15 @@ public class CarouselFragment extends Fragment {
 
     private Handler handler;
 
+    /**
+     * Carousel初始化
+     *
+     * @param context     当前Activity
+     * @param event       要展示的Event对象
+     * @param eventOrder  Event对象标记
+     * @param requestCode 当前Activity的requestCode标记
+     * @param isClickable 控件是否可点击，决定是否创建点击事件
+     */
     public CarouselFragment(Context context, Event event, int eventOrder, int requestCode,
                             boolean isClickable) {
         this.mContext = context;
@@ -100,6 +99,7 @@ public class CarouselFragment extends Fragment {
             @Override
             public void run() {
                 Calendar now = Calendar.getInstance();
+                //判断是倒计时还是顺计时
                 int addSecond = now.after(eventDate) ? 1 : -1;
                 interval.add(Calendar.SECOND, addSecond);
                 handler.post(updateCountDown);

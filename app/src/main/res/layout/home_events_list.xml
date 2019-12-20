@@ -5,17 +5,16 @@
     android:id="@+id/events_list_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/home_event_list_style"
+    android:orientation="vertical"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:paddingEnd="15dp">
+    android:paddingEnd="15dp"
+    android:paddingBottom="4dp">
 
     <FrameLayout
         android:id="@+id/frame_item_img_info"
         android:layout_width="80dp"
-        android:layout_height="80dp"
-        >
+        android:layout_height="80dp">
 
         <ImageView
             android:id="@+id/item_img"
@@ -33,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:text="还有"
                 android:textColor="@color/backgroundWord" />
 
             <TextView
@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/item_status"
                 android:gravity="center_horizontal"
+                android:text="几天"
                 android:textColor="@color/backgroundWord" />
 
         </RelativeLayout>
@@ -48,8 +49,8 @@
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/item_info"
+        android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_toEndOf="@+id/frame_item_img_info"
         android:background="#FFFFFF"
@@ -64,6 +65,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="标题"
             android:textSize="20sp" />
 
         <TextView
@@ -72,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
+            android:text="日期"
             android:textSize="15sp" />
 
         <TextView
@@ -83,6 +86,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="备注"
             android:textSize="12sp"
             tools:ignore="SmallSp" />
     </LinearLayout>
